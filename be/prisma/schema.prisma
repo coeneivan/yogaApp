@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Sequence {
+  id                 Int     @id @default(autoincrement())
+  name               String
+  description        String
+  poses              PosesInSequences[]
+}
+
+model Pose {
+  id                Int      @id @default(autoincrement())
+  name              String
+  englishName       String
+  imageUrl          String
+  foundInSequences  PosesInSequences[]
+}
+
+model PosesInSequences {
+  pose               Pose     @relation(fields: [poseId], references: [id])
+  poseId             Int
+  sequence           Sequence @relation(fields: [sequenceId], references: [id])
+  sequenceId         Int
+  order              Int
+  
+  @@id([poseId, sequenceId, order])
+}
